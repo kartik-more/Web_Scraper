@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Scraper Pro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="wrap">
+        <header>
+            <div class="hrow">
+                <div class="logo">🛒</div>
+                <h1>E-Commerce <em>Scraper</em> Pro</h1>
+                <div class="sub">Paste any e-commerce product or listing URL (Amazon/Flipkart/Myntra/Meesho/Shopsy/BooksToScrape). Extracts all products from search/list pages.</div>
+                <div class="how-pill">Advanced proxy scraper · Multi-site support · List & product extraction</div>
+            </div>
+        </header>
+
+        <!-- Input Card -->
+        <div class="card">
+            <div class="stag">Target URL</div>
+            <div class="irow">
+                <input class="uinp" id="urlInp" type="url" placeholder="https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html">
+                <button class="btn btn-go" id="goBtn" onclick="startScrape()">Scrape Now</button>
+                <button class="btn btn-ghost" onclick="clearAll()" title="Clear all">Clear</button>
+            </div>
+            
+            <div class="presets">
+                <span class="plabel">Try →</span>
+                <span class="chip amz" onclick="setUrl('https://www.amazon.in/s?k=laptop')">Amazon Search</span>
+                <span class="chip" onclick="setUrl('https://www.flipkart.com/search?q=laptop')">Flipkart Search</span>
+                <span class="chip" onclick="setUrl('https://www.myntra.com/men-tshirts')">Myntra Category</span>
+                <span class="chip" onclick="setUrl('https://www.meesho.com/search?q=tshirt')">Meesho Search</span>
+                <span class="chip" onclick="setUrl('https://www.shopsy.in/search?q=mobile')">Shopsy Search</span>
+                <span class="chip" onclick="setUrl('https://books.toscrape.com/')">BooksToScrape</span>
+                <span class="chip" id="allModeBtn" onclick="toggleAllMode()">All Sites Mode</span>
+            </div>
+        </div>
+
+        <!-- Field toggles -->
+        <div class="card">
+            <div class="stag" style="margin-top:20px">Fields to Extract</div>
+            <div class="opts" id="optsGrid"></div>
+        </div>
+
+        <!-- Status -->
+        <div class="status" id="statusBar">
+            <div class="spi" id="spinEl"></div>
+            <div class="sdot" id="sdotEl"></div>
+            <span id="statusTxt"></span>
+        </div>
+
+        <!-- Progress steps -->
+        <div id="stepsRow" style="display:none;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+            <div class="step" id="s1">① Fetch HTML</div>
+            <div class="step" id="s2">② Parse DOM</div>
+            <div class="step" id="s3">③ AI Extract</div>
+            <div class="step" id="s4">④ Render</div>
+        </div>
+
+        <!-- Results -->
+        <div id="resultsWrap" style="display:none;">
+            <div class="rhead">
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <span class="rtitle">Results</span>
+                    <span class="rcnt" id="rcnt">0 products</span>
+                </div>
+                <div class="ract">
+                    <div class="vtog">
+                        <button class="vbtn on" id="vgBtn" onclick="setView('grid')">Grid</button>
+                        <button class="vbtn" id="vtBtn" onclick="setView('table')">Table</button>
+                    </div>
+                    <button class="btn btn-ghost btn-sm" onclick="exportCSV()">CSV</button>
+                    <button class="btn btn-ghost btn-sm" onclick="exportJSON()">JSON</button>
+                    <button class="btn btn-red btn-sm" onclick="clearResults()">Clear</button>
+                </div>
+            </div>
+            <div class="pgrid" id="pgrid"></div>
+            <div class="twrap" id="twrap" style="display:none;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th><th>Product Name</th><th>Price</th><th>MRP</th><th>Discount</th><th>Rating</th><th>Reviews</th><th>Availability</th><th>Brand</th><th>Method</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="empty" id="emptyState">
+            <span class="eico">🛒</span>
+            <div class="et">No products scraped yet</div>
+            <div class="es">Paste a product URL above and hit <b>Scrape Now</b><br>Proxy-only scrape for books.toscrape.com</div>
+            <div class="logwrap">
+                <button class="ltog" onclick="toggleLog()">Scrape Log <span id="larrow">▾</span></button>
+                <div class="lbox" id="logBox"></div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

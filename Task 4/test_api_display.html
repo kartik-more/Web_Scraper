@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Data Display</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #1a1a1a; color: #fff; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #444; padding: 12px; text-align: left; }
+        th { background: #333; font-weight: bold; }
+        td { background: #222; }
+        .na { color: #999; }
+        h2 { color: #00d4ff; }
+    </style>
+</head>
+<body>
+    <h1>📊 API Response Data Test</h1>
+    
+    <p>This page shows the actual data being returned by the Flask API for books.toscrape.com</p>
+    
+    <h2>Sample Product Data</h2>
+    <table id="dataTable">
+        <tr>
+            <th>Field</th>
+            <th>Value</th>
+            <th>Status</th>
+        </tr>
+    </table>
+    
+    <h2>All Products (First 5)</h2>
+    <table id="productsTable">
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Rating</th>
+            <th>Brand</th>
+            <th>Category</th>
+            <th>Availability</th>
+        </tr>
+    </table>
+
+    <script>
+        async function test() {
+            const url = 'http://127.0.0.1:5000/scrape';
+            const payload = {
+                'url': 'https://books.toscrape.com/catalogue/page-1.html',
+                'pages': 1
+            };
+
+            try {
+                const r = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const j = await r.json();
+                
+                if (j.status === 'success' && j.data && j.data.length > 0) {
+                    const p = j.data[0];
+                    const fields = ['name', 'price', 'mrp', 'discount', 'rating', 'reviews',
+                                  'availability', 'brand', 'category', 'sku', 'seller'];
+                    
+                    // Fill first table
+                    const table = document.getElementById('dataTable');
+                    fields.forEach(f => {
+                        const val = p[f];
+                        const row = table.insertRow();
+                        row.innerHTML = `
+                            <td>${f}</td>
+                            <td class="${val === 'NA' ? 'na' : ''}">${val || 'MISSING'}</td>
+                            <td>${val && val !== 'NA' ? '✅ FILLED' : (val === 'NA' ? '⚠️ NA' : '❌ MISSING')}</td>
+                        `;
+                    });
+                    
+                    // Fill products table
+                    const pTable = document.getElementById('productsTable');
+                    j.data.slice(0, 5).forEach((prod, i) => {
+                        const row = pTable.insertRow();
+                        row.innerHTML = `
+                            <td>${i + 1}</td>
+                            <td>${(prod.name || 'NA').substring(0, 40)}</td>
+                            <td>${prod.price || 'NA'}</td>
+                            <td>${prod.rating || 'NA'}</td>
+                            <td>${prod.brand || 'NA'}</td>
+                            <td>${prod.category || 'NA'}</td>
+                            <td>${prod.availability || 'NA'}</td>
+                        `;
+                    });
+                } else {
+                    alert('Error: ' + (j.message || 'Unknown error'));
+                }
+            } catch (e) {
+                alert('Error: ' + e.message);
+            }
+        }
+        
+        // Run test when page loads
+        test();
+    </script>
+</body>
+</html>
